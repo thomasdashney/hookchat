@@ -73,7 +73,7 @@ class Chat extends Component<IChatProps, IChatState> {
   fetchNewMessage = async () => {
     if (this.state.noisy) {
       const response = await fetch(`${API}/new-message`)
-      const newMessage = await response.json()
+      const newMessage = (await response.json()) as IMessage
       this.setState(prevState => ({
         messages: prevState.messages.concat(newMessage)
       }))

@@ -36,19 +36,20 @@ export class UserProvider extends Component<
       this.fetchUsers(),
       this.fetchCurrentUser()
     ])
+
     this.setState({
       dataReady: true,
-      usersById: keyBy(users, 'id'),
+      usersById: keyBy<IUser>(users, 'id'),
       currentUser
     })
   }
 
-  fetchUsers = async () => {
+  fetchUsers = async (): Promise<IUser[]> => {
     const response = await fetch(`${API}/users`)
     return response.json()
   }
 
-  fetchCurrentUser = async () => {
+  fetchCurrentUser = async (): Promise<IUser> => {
     const response = await fetch(`${API}/me`)
     return response.json()
   }

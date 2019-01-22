@@ -12,6 +12,11 @@ interface IMessageScrollerProps {
   data: IMessage[]
 }
 
+type IMessageScrollerSnapshot {
+  bottom: boolean
+  to: number
+}
+
 class MessageScroller extends React.Component<IMessageScrollerProps> {
   listRef: RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
 
@@ -40,16 +45,18 @@ class MessageScroller extends React.Component<IMessageScrollerProps> {
     throttle(this.checkScroll, 500)(e)
   }
 
-  getSnapshotBeforeUpdate(prevProps: IMessageScrollerProps) {
+  getSnapshotBeforeUpdate(
+    prevProps: IMessageScrollerProps
+  ): null | IMessageScrollerSnapshot {
     // Scroll to the bottom initially
     if (prevProps.data.length === 0 && this.props.data.length) {
-      return { bottom: true }
+      return { bottom: true, to: 0 }
     }
 
     if (prevProps.data.length < this.props.data.length) {
       // If at the bottom, stay there
       if (this.isFullyScrolled()) {
-        return { bottom: true }
+        return { bottom: true, to: 0 }
       }
 
       const list = this.listRef.current as HTMLDivElement
@@ -74,7 +81,7 @@ class MessageScroller extends React.Component<IMessageScrollerProps> {
   componentDidUpdate(
     prevProps: IMessageScrollerProps,
     prevState: {},
-    snapshot: any
+    snapshot: null | IMessageScrollerSnapshot
   ) {
     if (snapshot !== null) {
       if (snapshot.bottom) {
