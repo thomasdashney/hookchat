@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { UserContext } from './UserContext'
 import Message from '../components/Message'
+import { IMessage } from '../types'
 
-const MessageList = props => {
+interface IMessageListProps {
+  data: IMessage[]
+}
+
+const MessageList: FunctionComponent<IMessageListProps> = props => {
   return (
     <UserContext.Consumer>
       {({ usersById }) => {

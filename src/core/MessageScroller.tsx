@@ -1,39 +1,46 @@
-import React from 'react'
+import React, { UIEvent, RefObject } from 'react'
 import throttle from 'lodash/throttle'
 import MessageContainer from '../components/MessageContainer'
 import MessageList from './MessageList'
+import { IMessage } from '../types'
 
 const MSG_HEIGHT = 120
 
-class MessageScroller extends React.Component {
-  listRef = React.createRef()
+interface IMessageScrollerProps {
+  loading: boolean
+  loadMore: () => void
+  data: IMessage[]
+}
 
-  componentDidMount () {
+class MessageScroller extends React.Component<IMessageScrollerProps> {
+  listRef: RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>()
+
+  componentDidMount() {
     this.scrollToBottom()
   }
 
   scrollToBottom = () => {
-    const list = this.listRef.current
+    const list = this.listRef.current as HTMLDivElement
     list.scrollTop = list.scrollHeight
   }
 
   isFullyScrolled = () => {
-    const list = this.listRef.current
+    const list = this.listRef.current as HTMLDivElement
     return list.scrollHeight - list.scrollTop === list.clientHeight
   }
 
-  checkScroll = e => {
-    if (e.target.scrollTop < 50 && !this.props.loading) {
+  checkScroll = (e: UIEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLDivElement).scrollTop < 50 && !this.props.loading) {
       this.props.loadMore()
     }
   }
 
-  handleScroll = e => {
+  handleScroll = (e: UIEvent<HTMLDivElement>) => {
     e.persist()
     throttle(this.checkScroll, 500)(e)
   }
 
-  getSnapshotBeforeUpdate (prevProps, prevState) {
+  getSnapshotBeforeUpdate(prevProps: IMessageScrollerProps) {
     // Scroll to the bottom initially
     if (prevProps.data.length === 0 && this.props.data.length) {
       return { bottom: true }
@@ -45,7 +52,7 @@ class MessageScroller extends React.Component {
         return { bottom: true }
       }
 
-      const list = this.listRef.current
+      const list = this.listRef.current as HTMLDivElement
 
       // If the message is being added to the bottom, account for
       // message height when changing scroll position
@@ -64,18 +71,22 @@ class MessageScroller extends React.Component {
     return null
   }
 
-  componentDidUpdate (prevProps, prevState, snapshot) {
+  componentDidUpdate(
+    prevProps: IMessageScrollerProps,
+    prevState: {},
+    snapshot: any
+  ) {
     if (snapshot !== null) {
       if (snapshot.bottom) {
         this.scrollToBottom()
       } else {
-        const list = this.listRef.current
+        const list = this.listRef.current as HTMLDivElement
         list.scrollTop = list.scrollHeight - snapshot.to
       }
     }
   }
 
-  render () {
+  render() {
     const { data, loading } = this.props
     return (
       <MessageContainer ref={this.listRef} onScroll={this.handleScroll}>

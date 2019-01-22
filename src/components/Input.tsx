@@ -1,6 +1,10 @@
 import styled from 'styled-components'
 
-export default styled.input`
+interface IInputProps {
+  error: boolean
+}
+
+const Input = styled.input<IInputProps>`
   border: none;
   background-color: ${props => (props.error ? '#E74C3C' : 'white')};
   transition: all linear 0.1s;
@@ -11,3 +15,5 @@ export default styled.input`
   box-sizing: border-box;
   padding: 5px;
 `
+
+export default Input

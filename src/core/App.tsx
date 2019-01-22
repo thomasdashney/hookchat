@@ -1,8 +1,8 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import { UserProvider } from './UserContext'
 import Chat from './Chat'
 
-const App = () => {
+const App: FunctionComponent = () => {
   return (
     <UserProvider>
       <Chat />

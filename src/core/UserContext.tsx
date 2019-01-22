@@ -1,17 +1,37 @@
-import React, { Component } from 'react'
+import React, { Component, ReactNode } from 'react'
 import keyBy from 'lodash/keyBy'
+import { IUser } from '../types'
 const API = process.env.REACT_APP_API
 
-export const UserContext = React.createContext()
+const INITIAL_USER_STATE = {
+  dataReady: false,
+  usersById: {},
+  currentUser: null
+}
 
-export class UserProvider extends Component {
-  state = {
-    dataReady: false,
-    usersById: {},
-    currentUser: {}
+export const UserContext = React.createContext<IUserProviderState>(
+  INITIAL_USER_STATE
+)
+
+interface IUserProviderProps {
+  children: ReactNode
+}
+
+export interface IUserProviderState {
+  dataReady: boolean
+  usersById: {
+    [id: number]: IUser
   }
+  currentUser: IUser | null
+}
 
-  async componentDidMount () {
+export class UserProvider extends Component<
+  IUserProviderProps,
+  IUserProviderState
+> {
+  state = INITIAL_USER_STATE
+
+  async componentDidMount() {
     const [users, currentUser] = await Promise.all([
       this.fetchUsers(),
       this.fetchCurrentUser()
@@ -33,10 +53,11 @@ export class UserProvider extends Component {
     return response.json()
   }
 
-  render () {
+  render() {
     if (!this.state.dataReady) {
       return 'Loading users...'
     }
+
     return (
       <UserContext.Provider value={this.state}>
         {this.props.children}
