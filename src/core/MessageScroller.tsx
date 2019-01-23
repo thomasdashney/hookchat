@@ -12,7 +12,7 @@ interface IMessageScrollerProps {
   data: IMessage[]
 }
 
-type IMessageScrollerSnapshot {
+interface IMessageScrollerSnapshot {
   bottom: boolean
   to: number
 }

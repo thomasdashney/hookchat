@@ -114,9 +114,7 @@ class Chat extends Component<IChatProps, IChatState> {
             {({ currentUser }) =>
               currentUser && (
                 <Compose
-                  onMessage={(text: string) =>
-                    this.handleCompose(text, currentUser.id)
-                  }
+                  onMessage={text => this.handleCompose(text, currentUser.id)}
                 />
               )
             }
