@@ -1,6 +1,6 @@
 const BANNED_WORDS = ['slack']
 
-const validate = text => {
+const validate = (text: string) => {
   return text
     .toLowerCase()
     .split(/\s/)

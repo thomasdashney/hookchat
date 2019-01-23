@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { FunctionComponent } from 'react'
 import styled from 'styled-components'
 import Avatar from './Avatar'
+import { IMessage } from '../types'
 
 const Username = styled.span`
   font-weight: 900;
@@ -19,7 +20,17 @@ const Content = styled.div`
   margin-left: 15px;
 `
 
-const Message = ({ time, userId, text, avatar, username }) => {
+interface IMessageProps extends IMessage {
+  avatar: string
+  username: string
+}
+
+const Message: FunctionComponent<IMessageProps> = ({
+  time,
+  text,
+  avatar,
+  username
+}) => {
   return (
     <Container>
       <Avatar src={avatar} />
